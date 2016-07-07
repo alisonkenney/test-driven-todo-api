@@ -1,96 +1,49 @@
 // wait for DOM to load before running JS
 $(document).ready(function() {
 
-function App() {
-  this.baseUrl = '/api/todos';
-  this.allTodos = [];
-  this.$todosList = $('#todos-list');
-  this.$createTodo = $('#create-todo');
-  this.source = source;
-  this.template = template;
-  this.todosHtml = todosHtml;
-}
-
-App.prototype = {
-  start: function(){
-    this.comileHandlebars();
-    this.$todosList.empty();
-    this.ajaxGet();
-  },
-
-  comileHandlebars: function (){
-    this.source = $('#todos-template').html();
-    this.template = Handlebars.compile(source);
-  },
-
-  ajaxGet: function(){
-    $.ajax({
-      method: "GET",
-      url: this.baseUrl,
-      success: function onIndexSuccess(json) {
-        console.log(json);
-        // set `allTodos` to todo data (json.data) from API
-        this.allTodos = json.todos;
-        this.render();
-      }
-
-    });
-  },
-
-  render: function() {
-    this.todosHtml = this.template({ todos: this.allTodos });
-    this.$todosList.append(this.todosHtml);
-  }
-
-};
-
-var app = new App();
-app.start();
-
   // base API route
-  //var baseUrl = '/api/todos';
+  var baseUrl = '/api/todos';
 
   // array to hold todo data from API
-  //var allTodos = [];
+  var allTodos = [];
 
   // element to display list of todos
-  //var $todosList = $('#todos-list');
+  var $todosList = $('#todos-list');
 
   // form to create new todo
-  //var $createTodo = $('#create-todo');
+  var $createTodo = $('#create-todo');
 
   // compile handlebars template
-  //var source = $('#todos-template').html();
-  //var template = Handlebars.compile(source);
+  var source = $('#todos-template').html();
+  var template = Handlebars.compile(source);
 
   // helper function to render all todos to view
   // note: we empty and re-render the collection each time our todo data changes
-
-  //function render() {
+  function render() {
     // empty existing todos from view
-    //$todosList.empty();
+    $todosList.empty();
 
     // pass `allTodos` into the template function
-    //var todosHtml = template({ todos: allTodos });
+    var todosHtml = template({ todos: allTodos });
 
     // append html to the view
-    //$todosList.append(todosHtml);
-  //};
+    $todosList.append(todosHtml);
+  };
 
   // GET all todos on page load
-  // $.ajax({
-  //   method: "GET",
-  //   url: baseUrl,
-  //   success: function onIndexSuccess(json) {
-  //     console.log(json);
+  $.ajax({
+    method: "GET",
+    url: baseUrl,
+    success: function onIndexSuccess(json) {
+      console.log(json);
 
-  //     // set `allTodos` to todo data (json.data) from API
-  //     allTodos = json.todos;
+      // set `allTodos` to todo data (json.data) from API
+      allTodos = json.todos;
 
-  //     // render all todos to view
-  //     render();
-  //   }
-  // });
+      // render all todos to view
+      render();
+    }
+  });
 
   // listen for submit even on form
   $createTodo.on('submit', function (event) {
